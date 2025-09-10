@@ -1,0 +1,18 @@
+# Visualización básica
+/control/verbose 1
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+/vis/open OGL 600x600-0+0
+/vis/viewer/set/style surface
+/vis/scene/create
+/vis/scene/add/volume
+/vis/sceneHandler/attach
+/vis/scene/add/trajectories smooth
+/vis/viewer/zoom 1.5
+
+/random/setSeeds 12345 67890
+
+/run/initialize
+/run/printProgress 10000
+/run/beamOn 100000

@@ -1,0 +1,31 @@
+#include "PhaseSpaceSD.hh"
+#include "G4Step.hh"
+#include "G4AnalysisManager.hh"
+#include "G4SystemOfUnits.hh"
+
+G4bool PhaseSpaceSD::ProcessHits(G4Step* step, G4TouchableHistory*) {
+  if (step->GetPostStepPoint()->GetStepStatus() != fGeomBoundary) return false;
+
+  auto* p  = step->GetTrack()->GetDynamicParticle();
+  auto  pos = step->GetPostStepPoint()->GetPosition();
+  auto  dir = p->GetMomentumDirection();
+  auto  Ek  = p->GetKineticEnergy();
+  auto  t   = step->GetTrack()->GetGlobalTime();
+  auto  w   = step->GetTrack()->GetWeight();
+  auto  pdg = p->GetDefinition()->GetPDGEncoding();
+
+  auto man = G4AnalysisManager::Instance();
+  man->FillNtupleDColumn(0, pos.x()/mm);
+  man->FillNtupleDColumn(1, pos.y()/mm);
+  man->FillNtupleDColumn(2, pos.z()/mm);
+  man->FillNtupleDColumn(3, dir.x());
+  man->FillNtupleDColumn(4, dir.y());
+  man->FillNtupleDColumn(5, dir.z());
+  man->FillNtupleDColumn(6, Ek/MeV);
+  man->FillNtupleDColumn(7, t/ns);
+  man->FillNtupleDColumn(8, w);
+  man->FillNtupleIColumn(9, pdg);
+  man->AddNtupleRow();
+
+  return true;
+}
