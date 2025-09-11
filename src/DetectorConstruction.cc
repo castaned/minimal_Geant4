@@ -7,6 +7,7 @@
 #include "G4PVPlacement.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4SDManager.hh"
+#include "G4VisAttributes.hh"
 #include "PhaseSpaceSD.hh"
 
 G4VPhysicalVolume* DetectorConstruction::Construct() {
@@ -22,12 +23,23 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
   auto logicWorld = new G4LogicalVolume(solidWorld, worldMat, "World");
   auto physWorld  = new G4PVPlacement(nullptr, {}, logicWorld, "World", nullptr, false, 0);
 
+  //World Attributes 
+  G4VisAttributes * WorldAttr = new G4VisAttributes;
+  WorldAttr->SetVisibility(false);
+  logicWorld->SetVisAttributes(WorldAttr);
+  
   const G4double targetR   = 10.*mm;
   const G4double targetDz  = 1.*mm;
   auto solidTarget = new G4Tubs("Target", 0., targetR, targetDz, 0.*deg, 360.*deg);
   auto logicTarget = new G4LogicalVolume(solidTarget, W, "Target");
   new G4PVPlacement(nullptr, {0,0, +targetDz}, logicTarget, "Target", logicWorld, false, 0);
 
+  //Target Attributes
+  G4VisAttributes * TargetAttr = new G4VisAttributes(G4Colour::Gray);
+  TargetAttr->SetVisibility(true);
+  TargetAttr->SetForceSolid(true);
+  logicTarget->SetVisAttributes(TargetAttr);
+  
   const G4double planeXY = 40.*mm;
   const G4double planeDz = 5.*um;
   auto solidPlane = new G4Box("Plane", planeXY/2, planeXY/2, planeDz);
@@ -35,6 +47,13 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
 
   new G4PVPlacement(nullptr, {0,0, -0.05*mm}, fPlaneLV, "Plane", logicWorld, false, 0);
 
+  //Plane Attributes
+  G4VisAttributes * PlaneAttr = new G4VisAttributes(G4Colour::Blue);
+  PlaneAttr->SetVisibility(true);
+  PlaneAttr->SetForceSolid(true);
+  fPlaneLV->SetVisAttributes(PlaneAttr);
+
+    
   return physWorld;
 }
 
