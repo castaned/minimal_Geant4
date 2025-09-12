@@ -1,2 +1,3 @@
 
-11/Sep/25 - Amy: modificaciones de visualización
+11/Sep/25 - Amy: modificaciones de visualización.
+11/Sep/25 - Amy: Comencé el analisis de los procesos dominantes, separé los headers en una carpeta /include, y los archivos de código en la carpeta /src, main.cc en el directorio del proyecto.
