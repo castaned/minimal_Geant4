@@ -9,12 +9,13 @@
 
 int main(int argc, char** argv) {
   auto* runManager = G4RunManagerFactory::CreateRunManager();
+  runManager->SetNumberOfThreads(1);
   runManager->SetUserInitialization(new DetectorConstruction());
   runManager->SetUserInitialization(new FTFP_BERT());
 
   runManager->SetUserInitialization(new ActionInitialization());
 
-  auto* visManager = new G4VisExecutive();
+  G4VisExecutive * visManager = new G4VisExecutive();
   visManager->Initialize();
 
   auto* UImanager = G4UImanager::GetUIpointer();
@@ -22,11 +23,7 @@ int main(int argc, char** argv) {
   if (argc == 1) {
     auto* ui = new G4UIExecutive(argc, argv);
     // Si quieres cargar visualización básica por defecto:
-    //    UImanager->ApplyCommand("/control/execute macros/vis.mac");
-    
-    if (ui->IsGUI()) {
-      UImanager->ApplyCommand("/control/execute macros/gui.mac");
-    }
+    UImanager->ApplyCommand("/control/execute macros/vis_start.mac");
     
     ui->SessionStart();
     delete ui;
