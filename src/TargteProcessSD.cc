@@ -14,7 +14,13 @@ G4bool TargetProcessSD::ProcessHits(G4Step * step, G4TouchableHistory*){
 
   auto pre   = step->GetPreStepPoint();
   auto glob  = pre->GetPosition();
-  auto local = pre->GetTouchableHandle()->GetHistory()->GetTopTransform().TransformPoint(glob);
+  //  auto local = pre->GetTouchableHandle()->GetHistory()->GetTopTransform().TransformPoint(glob);
+  //intento de actualizado para obtener el local
+  auto touch     = pre->GetTouchable();
+  auto transform = touch->GetHistory()->GetTopTransform();
+  auto local     = transform.NetRotation() * step->GetPreStepPoint()->GetPosition() + transform.NetTranslation();
+
+  
   int zbin = int((local.z()+fHalfZ)/(2.*fHalfZ) * fNBins);
 
   if (zbin < 0) zbin = 0;

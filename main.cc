@@ -12,9 +12,9 @@ int main(int argc, char** argv) {
   runManager->SetNumberOfThreads(1);
   runManager->SetUserInitialization(new DetectorConstruction());
   runManager->SetUserInitialization(new FTFP_BERT());
-
   runManager->SetUserInitialization(new ActionInitialization());
-
+  runManager->Initialize();
+  
   G4VisExecutive * visManager = new G4VisExecutive();
   visManager->Initialize();
 

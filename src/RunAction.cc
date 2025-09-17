@@ -35,9 +35,10 @@ void RunAction::EndOfRunAction(const G4Run*)   {
   auto tman =G4AnalysisManager::Instance();
   tman->Write();
   tman->CloseFile();
- 
+
+  if(!IsMaster()) return;
   auto* tsdm = G4SDManager::GetSDMpointer();
-  auto* tsd  = dynamic_cast<TargetProcessSD*> (tsdm->FindSensitiveDetector("TargetProcSD"));
+  auto* tsd  = dynamic_cast<TargetProcessSD*> (tsdm->FindSensitiveDetector("TargetProcSD",false));
   if(!tsd) return;
   const auto& counts = tsd->Counts();
   std::ofstream ofs("dominan_by_step.csv");
