@@ -9,6 +9,8 @@
 #include "G4SDManager.hh"
 #include "G4VisAttributes.hh"
 #include "PhaseSpaceSD.hh"
+#include "TargetProcessSD.hh"
+
 
 G4VPhysicalVolume* DetectorConstruction::Construct() {
   auto nist = G4NistManager::Instance();
@@ -32,8 +34,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
   const G4double targetDz  = 1.*mm;
   auto solidTarget = new G4Tubs("Target", 0., targetR, targetDz, 0.*deg, 360.*deg);
   auto logicTarget = new G4LogicalVolume(solidTarget, W, "Target");
-  new G4PVPlacement(nullptr, {0,0, +targetDz}, logicTarget, "Target", logicWorld, false, 0);
+  new G4PVPlacement(nullptr, {0,0, 1*mm}, logicTarget, "Target", logicWorld, false, 0);
+  fTargetLV = logicTarget;
 
+  
   //Target Attributes
   G4VisAttributes * TargetAttr = new G4VisAttributes(G4Colour::Gray);
   TargetAttr->SetVisibility(true);
@@ -45,7 +49,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
   auto solidPlane = new G4Box("Plane", planeXY/2, planeXY/2, planeDz);
   fPlaneLV = new G4LogicalVolume(solidPlane, worldMat, "Plane");
 
-  new G4PVPlacement(nullptr, {0,0, -0.05*mm}, fPlaneLV, "Plane", logicWorld, false, 0);
+  new G4PVPlacement(nullptr, {0,0, -2*mm}, fPlaneLV, "Plane", logicWorld, false, 0);
 
   //Plane Attributes
   G4VisAttributes * PlaneAttr = new G4VisAttributes(G4Colour::Blue);
@@ -58,8 +62,18 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
 }
 
 void DetectorConstruction::ConstructSDandField() {
+  //Phase Space
   auto sd = new PhaseSpaceSD("PhaseSpaceSD");
   auto sdm = G4SDManager::GetSDMpointer();
   sdm->AddNewDetector(sd);
   fPlaneLV->SetSensitiveDetector(sd);
+
+
+  //Target Process
+  auto * tsdm = G4SDManager::GetSDMpointer();
+  const G4int nBins = 20;
+  const G4double halfZ = 1.*mm;
+  auto* tproc = new TargetProcessSD("TargerProcSD",nBins, halfZ);
+  tsdm->AddNewDetector(tproc);
+  fTargetLV->SetSensitiveDetector(tproc);
 }

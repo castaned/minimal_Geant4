@@ -3,6 +3,9 @@
 /run/verbose 1
 /event/verbose 0
 /tracking/verbose 0
+
+/run/initialize
+
 /vis/open OGL 600x600-0+0
 /vis/viewer/set/style surface
 /vis/scene/create
@@ -13,6 +16,5 @@
 
 /random/setSeeds 12345 67890
 
-/run/initialize
 /run/printProgress 10000
 /run/beamOn 100000
