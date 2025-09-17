@@ -1,0 +1,29 @@
+# 1) SIEMPRE inicializa primero (construye geometría, física, SD, etc.)
+/run/initialize
+
+# 2) Abre un visor (usa el que tengas disponible)
+# Prueba en este orden: OGL (X11), OGLQt (Qt), RayTracerX (software)
+/vis/open OGL 800x600-0+0
+# /vis/open OGLQt 800x600-0+0
+# /vis/open RayTracerX 800x600-0+0
+
+# 3) Crea y adjunta escena
+/vis/scene/create
+/vis/sceneHandler/attach
+
+# 4) Añade contenido a la escena
+/vis/scene/add/volume            # dibuja el World y el resto de la geometría
+/vis/scene/add/axes 0 0 0 50 cm  # ejes opcionales
+/vis/scene/add/trajectories smooth
+/vis/scene/add/hits
+
+# 5) Ajustes del viewer
+/vis/viewer/set/style surface
+/vis/viewer/set/autoRefresh true
+/vis/viewer/zoom 1.3
+/vis/viewer/update
+
+# (Opcional) Para ver algunos eventos aquí mismo:
+#/tracking/storeTrajectory 1
+#/run/printProgress 100
+#/run/beamOn 50
