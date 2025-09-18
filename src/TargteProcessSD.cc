@@ -14,17 +14,19 @@ G4bool TargetProcessSD::ProcessHits(G4Step * step, G4TouchableHistory*){
 
   auto pre   = step->GetPreStepPoint();
   auto glob  = pre->GetPosition();
-  //  auto local = pre->GetTouchableHandle()->GetHistory()->GetTopTransform().TransformPoint(glob);
+  auto local = pre->GetTouchableHandle()->GetHistory()->GetTopTransform().TransformPoint(glob);
   //intento de actualizado para obtener el local
-  auto touch     = pre->GetTouchable();
-  auto transform = touch->GetHistory()->GetTopTransform();
-  auto local     = transform.NetRotation() * step->GetPreStepPoint()->GetPosition() + transform.NetTranslation();
+  //  auto touch     = pre->GetTouchable();
+  //  auto transform = touch->GetHistory()->GetTopTransform();
+  //  auto local     = transform.NetRotation() * step->GetPreStepPoint()->GetPosition() + transform.NetTranslation();
 
   
   int zbin = int((local.z()+fHalfZ)/(2.*fHalfZ) * fNBins);
 
-  if (zbin < 0) zbin = 0;
-  if (zbin > fNBins) zbin =fNBins-1;
+  //  if (zbin < 0) zbin = 0;
+  //  if (zbin > fNBins) zbin =fNBins-1;
+  zbin = std::clamp(zbin,0,fNBins-1);
+  
   int subtype = proc->GetProcessSubType();
   fCounts[zbin][subtype]++;
   return true; 

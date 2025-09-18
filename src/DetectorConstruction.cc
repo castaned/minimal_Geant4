@@ -26,20 +26,22 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
   auto physWorld  = new G4PVPlacement(nullptr, {}, logicWorld, "World", nullptr, false, 0);
 
   //World Attributes 
-  G4VisAttributes * WorldAttr = new G4VisAttributes;
-  WorldAttr->SetVisibility(false);
+  G4VisAttributes * WorldAttr = new G4VisAttributes();
+  WorldAttr->SetVisibility(true);
+  WorldAttr->SetForceSolid(false);
+  WorldAttr->SetForceWireframe(true);
   logicWorld->SetVisAttributes(WorldAttr);
   
   const G4double targetR   = 10.*mm;
   const G4double targetDz  = 1.*mm;
   auto solidTarget = new G4Tubs("Target", 0., targetR, targetDz, 0.*deg, 360.*deg);
   auto logicTarget = new G4LogicalVolume(solidTarget, W, "Target");
-  new G4PVPlacement(nullptr, {0,0, 1*mm}, logicTarget, "Target", logicWorld, false, 0);
+  new G4PVPlacement(nullptr, {0,0, 1*cm}, logicTarget, "Target", logicWorld, false, 0);
   fTargetLV = logicTarget;
 
   
   //Target Attributes
-  G4VisAttributes * TargetAttr = new G4VisAttributes(G4Colour::Gray);
+  G4VisAttributes * TargetAttr = new G4VisAttributes(G4Colour::Gray());
   TargetAttr->SetVisibility(true);
   TargetAttr->SetForceSolid(true);
   logicTarget->SetVisAttributes(TargetAttr);
@@ -52,7 +54,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
   new G4PVPlacement(nullptr, {0,0, -2*mm}, fPlaneLV, "Plane", logicWorld, false, 0);
 
   //Plane Attributes
-  G4VisAttributes * PlaneAttr = new G4VisAttributes(G4Colour::Blue);
+  G4VisAttributes * PlaneAttr = new G4VisAttributes(G4Colour::Blue());
   PlaneAttr->SetVisibility(true);
   PlaneAttr->SetForceSolid(true);
   fPlaneLV->SetVisAttributes(PlaneAttr);
@@ -73,7 +75,7 @@ void DetectorConstruction::ConstructSDandField() {
   auto * tsdm = G4SDManager::GetSDMpointer();
   const G4int nBins = 20;
   const G4double halfZ = 1.*mm;
-  auto* tproc = new TargetProcessSD("TargerProcSD",nBins, halfZ);
+  auto* tproc = new TargetProcessSD("TargetProcSD",nBins, halfZ);
   tsdm->AddNewDetector(tproc);
   fTargetLV->SetSensitiveDetector(tproc);
 }
