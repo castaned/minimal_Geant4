@@ -44,7 +44,7 @@ void RunAction::EndOfRunAction(const G4Run*)   {
     
   if(!tsd) return;
   const auto& counts = tsd->Counts();
-  std::ofstream ofs("dominan_by_step.csv");
+  std::ofstream ofs("dominant_by_depth.csv");
   ofs << "zbin,subtype,count\n";
   
   for (size_t b=0; b < counts.size(); ++b){
