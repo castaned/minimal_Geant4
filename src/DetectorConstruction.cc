@@ -72,10 +72,11 @@ void DetectorConstruction::ConstructSDandField() {
 
 
   //Target Process
-  auto * tsdm = G4SDManager::GetSDMpointer();
+  //auto * tsdm = G4SDManager::GetSDMpointer();
   const G4int nBins = 20;
   const G4double halfZ = 1.*mm;
   auto* tproc = new TargetProcessSD("TargetProcSD",nBins, halfZ);
-  tsdm->AddNewDetector(tproc);
+  //tsdm->AddNewDetector(tproc);
+  G4SDManager::GetSDMpointer()->AddNewDetector(tproc);
   fTargetLV->SetSensitiveDetector(tproc);
 }

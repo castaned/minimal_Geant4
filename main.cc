@@ -8,14 +8,14 @@
 #include "DetectorConstruction.hh"
 
 int main(int argc, char** argv) {
-  auto* runManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::Default);
-  runManager->SetNumberOfThreads(1);
+  auto* runManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::Serial);
   runManager->SetUserInitialization(new DetectorConstruction());
   runManager->SetUserInitialization(new FTFP_BERT());
   runManager->SetUserInitialization(new ActionInitialization());
-  runManager->Initialize();
+
+  //runManager->Initialize();
   
-  G4VisExecutive * visManager = new G4VisExecutive();
+  auto * visManager = new G4VisExecutive();
   visManager->Initialize();
 
   auto* UImanager = G4UImanager::GetUIpointer();
