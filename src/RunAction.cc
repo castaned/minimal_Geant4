@@ -1,8 +1,14 @@
-#include <fstream>
+
 #include "G4SDManager.hh"
-#include "TargetProcessSD.hh"
 #include "G4AnalysisManager.hh"
+
 #include "RunAction.hh"
+#include "TargetProcessSD.hh"
+
+#include <vector>
+#include <fstream>
+#include <map>
+
 
 RunAction::RunAction() {
   auto man = G4AnalysisManager::Instance();
@@ -28,13 +34,20 @@ RunAction::RunAction() {
   man->FinishNtuple();
 }
 
-void RunAction::BeginOfRunAction(const G4Run*) { G4AnalysisManager::Instance()->OpenFile(); }
-void RunAction::EndOfRunAction(const G4Run*)   {
-  auto man=G4AnalysisManager::Instance(); man->Write(); man->CloseFile();
+void RunAction::BeginOfRunAction(const G4Run*) {
+  //Sensitive Detectors
+  G4AnalysisManager::Instance()->OpenFile();
 
-  //  auto tman =G4AnalysisManager::Instance();
-  //tman->Write();
-  //tman->CloseFile();
+  //SecondaryParticles
+  fSecondaries.clear();
+  
+}
+
+
+void RunAction::EndOfRunAction(const G4Run*)   {
+
+  //SensitiveDetectors
+  auto man=G4AnalysisManager::Instance(); man->Write(); man->CloseFile();
 
   if(!IsMaster()) return;
   auto* tsdm = G4SDManager::GetSDMpointer();
@@ -55,6 +68,32 @@ void RunAction::EndOfRunAction(const G4Run*)   {
     ofs << b << "," << bestSubType << "," << bestCount << "\n";
 
   }
+
+  //SecondaryParticles
+
+  std::map<G4String,int> typeCount;
+  std::ofstream outFile("Secondary.csv");
+  outFile<< "name,ekin_MeV,posX_mm,posY_mm,posZ_mm,"
+	 << "momX,momY,momZ,process\n";
+  for (auto& sec : fSecondaries){
+    typeCount[sec.name]++;
+    outFile << sec.name << ","
+	    << sec.ekin/CLHEP::MeV << ","
+	    << sec.pos.x()/CLHEP::mm << ","
+            << sec.pos.y()/CLHEP::mm << ","
+            << sec.pos.z()/CLHEP::mm << ","
+            << sec.mom.x() << ","
+	    << sec.mom.y() << ","
+	    << sec.mom.z() << ","
+	    << sec.proc << "\n";
+  };
+
+  outFile.close();
+
+  G4cout << "\n === Secondary particle summary ===\n"<<G4endl;
+  for (auto& kv : typeCount){
+    G4cout << kv.first << ":" <<  kv.second <<G4endl;
+  };
   
 }
 

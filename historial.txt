@@ -2,3 +2,5 @@
 11/Sep/25 - Amy: modificaciones de visualización.
 11/Sep/25 - Amy: Comencé el analisis de los procesos dominantes, separé los headers en una carpeta /include, y los archivos de código en la carpeta /src, main.cc en el directorio del proyecto.
 18/Sep/25 - Amy: Análisis de procesos dominantes output: "dominant_by_depth.csv" 
+30/Sep/25 - Amy: Para un mejor analisis, se implementa el uso de G4UserStackingAction para recolectar las partículas secundarias generadas con su respectivo nombre, energía cinética, posición, momento y nombre de proceso.
+
