@@ -23,8 +23,14 @@ public:
       G4String     proc = trk->GetCreatorProcess() ?
 	                  trk->GetCreatorProcess()->GetProcessName() : "primary";
 
-      fRunAction -> RecordSecondary(name,ekin,pos,mom,proc);
+      G4String volumeName = trk->GetVolume()->GetName();
 
+        // Guardar solo si está dentro del volumen "Phantom"
+        if (volumeName == "Target") {
+	  fRunAction->RecordSecondary(name, ekin, pos, mom, proc);
+	      };
+      //fRunAction -> RecordSecondary(name,ekin,pos,mom,proc);
+      
     }
     return fUrgent;
   }
