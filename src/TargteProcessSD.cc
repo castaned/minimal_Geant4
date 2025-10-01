@@ -26,7 +26,7 @@ G4bool TargetProcessSD::ProcessHits(G4Step * step, G4TouchableHistory*){
   //  if (zbin > fNBins) zbin =fNBins-1;
   zbin = std::clamp(zbin,0,fNBins-1);
 
-  G4cout<<"Hit in TargetProcessSD: proc = " <<pname << "zbin = " << zbin << G4endl;
+  // G4cout<<"Hit in TargetProcessSD: proc = " <<pname << "zbin = " << zbin << G4endl;
   
   int subtype = proc->GetProcessSubType();
   fCounts[zbin][subtype]++;
